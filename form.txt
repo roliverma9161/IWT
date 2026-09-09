@@ -1,0 +1,33 @@
+<html>
+<body>
+<h2>application form</>
+<form action="/ABC.php">
+<label form="fname">first name</label><br>
+<input type="text"id="fname"name="fname value="XYZ">
+<label form="lname">last name</label><br>
+<input type="text"id="lname"name="lname value="XYZ">
+<label form="roll no.">roll no.</label><br>
+<input type="number"id="roll no."name="roll no. value="123">
+<label form="email">email name</label><br>
+<input type="email"id="email"name="email">
+<label form="passward">passward</label><br>
+<input type="passward"id="passward"name="passward">n
+<label form="date">date</label><br>
+<input type="DOB"="date"name="date">
+<p>chose higher qualification</p>
+<input type="radio"id="HS"name="higher_qualification"value="HS">
+<label form="HS">High school</label>
+<input type="radio"id="IM"name=higher_qualification"value="IM"
+<label form="IM">id="intermediate</label>
+<input type="CB"id="subject"name"subject"value="c">
+<label form="subject">c</label>
+<input type="CB"id="subject"name"subject"value="OS">
+<label form="subject">OS</label>
+<input type="CB"id="subject"name"subject"value="PHP">
+<label form="subject">PHP</label>
+<input type="CB"id="subject"name"subject"value="JAVA">
+<label form="subject">JAVA</label>
+<input type="button"on click="submit succesfully value="submit">
+</form>
+</body>
+</html>
