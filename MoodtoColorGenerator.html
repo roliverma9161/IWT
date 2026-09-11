@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Moodify - Mood to Color</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #667eea;
+            transition: background 0.7s ease;
+            overflow-x: hidden;
+        }
+
+        /* Background decoration */
+        .circle {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            pointer-events: none;
+        }
+
+        .circle-one {
+            width: 250px;
+            height: 250px;
+            top: -80px;
+            left: -70px;
+        }
+
+        .circle-two {
+            width: 350px;
+            height: 350px;
+            bottom: -150px;
+            right: -100px;
+        }
+
+        .container-box {
+            width: 100%;
+            max-width: 850px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 30px;
+            padding: 40px;
+            color: white;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-top: 18px;
+        }
+
+        .subtitle {
+            opacity: 0.85;
+            font-size: 15px;
+        }
+
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .mood-btn {
+            border: none;
+            padding: 18px 10px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .mood-btn:hover {
+            transform: translateY(-6px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .mood-btn.active {
+            background: white;
+            color: #333;
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+        }
+
+        .mood-emoji {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 7px;
+        }
+
+        .mood-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .result {
+            margin-top: 35px;
+            padding: 28px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .big-emoji {
+            font-size: 70px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .mood-result {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .quote {
+            margin: 10px auto 20px;
+            max-width: 600px;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .color-box {
+            width: 100%;
+            height: 80px;
+            border-radius: 18px;
+            margin: 20px 0;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: background 0.5s ease;
+        }
+
+        .hex-code {
+            display: inline-block;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .copy-btn {
+            border: none;
+            padding: 11px 22px;
+            border-radius: 12px;
+            background: white;
+            color: #333;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .random-btn {
+            margin-top: 18px;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 11px 22px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .random-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            opacity: 0.65;
+        }
+
+        /* Toast */
+        .toast-message {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: white;
+            color: #222;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: 0.3s;
+            z-index: 999;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .glass-card {
+                padding: 25px 18px;
+            }
+
+            .title {
+                font-size: 32px;
+            }
+
+            .mood-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .mood-btn:last-child {
+                grid-column: span 2;
+            }
+
+            .big-emoji {
+                font-size: 60px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .mood-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Decorative circles -->
+    <div class="circle circle-one"></div>
+    <div class="circle circle-two"></div>
+
+    <div class="container-box">
+
+        <div class="glass-card">
+
+            <!-- Header -->
+            <div class="text-center">
+
+                <div class="logo">
+                    🎨
+                </div>
+
+                <h1 class="title">
+                    Moodify
+                </h1>
+
+                <p class="subtitle">
+                    Choose your mood & discover your color
+                </p>
+
+            </div>
+
+
+            <!-- Mood Buttons -->
+            <div class="mood-grid">
+
+                <button
+                    class="mood-btn active"
+                    data-mood="happy"
+                    onclick="changeMood('happy', this)"
+                >
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-name">Happy</span>
+                </button>
+
+                <button
+                    class="mood-btn"
+                    data-mood="calm"
+                    onclick="changeMood('calm', this)"
+                >
+                    <span class="mood-emoji">😌</span>
+                    <span class="mood-name">Calm</span>
+                </button>
+
+                <button
+                    class="mood-btn"
+                    data-mood="cool"
+                    onclick="changeMood('cool', this)"
+                >
+                    <span class="mood-emoji">😎</span>
+                    <span class="mood-name">Cool</span>
+                </button>
+
+                <button
+                    class="mood-btn"
+                    data-mood="angry"
+                    onclick="changeMood('angry', this)"
+                >
+                    <span class="mood-emoji">😡</span>
+                    <span class="mood-name">Angry</span>
+                </button>
+
+                <button
+                    class="mood-btn"
+                    data-mood="lazy"
+                    onclick="changeMood('lazy', this)"
+                >
+                    <span class="mood-emoji">😴</span>
+                    <span class="mood-name">Lazy</span>
+                </button>
+
+            </div>
+
+
+            <!-- Result -->
+            <div class="result text-center">
+
+                <div
+                    id="resultEmoji"
+                    class="big-emoji"
+                >
+                    😊
+                </div>
+
+                <div
+                    id="resultMood"
+                    class="mood-result"
+                >
+                    Feeling Happy
+                </div>
+
+                <p
+                    id="resultQuote"
+                    class="quote"
+                >
+                    "Happiness looks good on you!"
+                </p>
+
+                <!-- Color -->
+                <div
+                    id="colorBox"
+                    class="color-box"
+                ></div>
+
+                <div>
+                    <span
+                        id="hexCode"
+                        class="hex-code"
+                    >
+                        #FFD166
+                    </span>
+                </div>
+
+                <button
+                    class="copy-btn"
+                    onclick="copyColor()"
+                >
+                    📋 Copy Color
+                </button>
+
+                <br>
+
+                <button
+                    class="random-btn"
+                    onclick="randomMood()"
+                >
+                    ✨ Surprise Me
+                </button>
+
+            </div>
+
+
+            <!-- Footer -->
+            <div class="footer">
+                Made with ❤️ using HTML • CSS • JavaScript • Bootstrap
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Toast -->
+    <div
+        id="toast"
+        class="toast-message"
+    >
+        Color copied! 🎨
+    </div>
+
+
+    <script>
+
+        // Mood data
+        const moods = {
+
+            happy: {
+                emoji: "😊",
+                name: "Feeling Happy",
+                quote: "Happiness looks good on you!",
+                color: "#FFD166"
+            },
+
+            calm: {
+                emoji: "😌",
+                name: "Feeling Calm",
+                quote: "Take a breath. Everything is going to be okay.",
+                color: "#72D6C9"
+            },
+
+            cool: {
+                emoji: "😎",
+                name: "Feeling Cool",
+                quote: "Stay confident. Stay yourself.",
+                color: "#4D96FF"
+            },
+
+            angry: {
+                emoji: "😡",
+                name: "Feeling Angry",
+                quote: "Pause. Breathe. You are stronger than your anger.",
+                color: "#FF595E"
+            },
+
+            lazy: {
+                emoji: "😴",
+                name: "Feeling Lazy",
+                quote: "Sometimes doing nothing is exactly what you need.",
+                color: "#9B8AFB"
+            }
+
+        };
+
+
+        // Current mood
+        let currentMood = "happy";
+
+
+        // Change mood
+        function changeMood(mood, button) {
+
+            currentMood = mood;
+
+            const data = moods[mood];
+
+            // Remove active class
+            document.querySelectorAll(".mood-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            // Add active class
+            button.classList.add("active");
+
+            updateUI(data);
+        }
+
+
+        // Update UI
+        function updateUI(data) {
+
+            const emoji = document.getElementById("resultEmoji");
+            const mood = document.getElementById("resultMood");
+            const quote = document.getElementById("resultQuote");
+            const colorBox = document.getElementById("colorBox");
+            const hex = document.getElementById("hexCode");
+
+            emoji.textContent = data.emoji;
+            mood.textContent = data.name;
+            quote.textContent = `"${data.quote}"`;
+            colorBox.style.background = data.color;
+            hex.textContent = data.color;
+
+            // Change body background
+            document.body.style.background =
+                `linear-gradient(135deg, ${data.color}, #222)`;
+        }
+
+
+        // Copy HEX color
+        function copyColor() {
+
+            const color = moods[currentMood].color;
+
+            navigator.clipboard.writeText(color)
+                .then(() => {
+
+                    showToast("Color copied! 🎨");
+
+                })
+                .catch(() => {
+
+                    showToast("Copy failed!");
+
+                });
+        }
+
+
+        // Random mood
+        function randomMood() {
+
+            const moodNames = Object.keys(moods);
+
+            const randomIndex =
+                Math.floor(Math.random() * moodNames.length);
+
+            const randomMoodName =
+                moodNames[randomIndex];
+
+            const button =
+                document.querySelector(
+                    `[data-mood="${randomMoodName}"]`
+                );
+
+            changeMood(randomMoodName, button);
+        }
+
+
+        // Toast notification
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+            toast.textContent = message;
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2000);
+        }
+
+
+        // Initialize
+        updateUI(moods.happy);
+
+    </script>
+
+</body>
+</html>
