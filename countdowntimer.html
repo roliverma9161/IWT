@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Countdown Timer</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Google Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: white;
+    }
+
+    .timer-card {
+      width: 100%;
+      max-width: 850px;
+      padding: 45px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .title {
+      font-size: 38px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #c7c7c7;
+      font-size: 14px;
+    }
+
+    .date-box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 35px;
+    }
+
+    .time-box {
+      text-align: center;
+      padding: 25px 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .number {
+      display: block;
+      font-size: 42px;
+      font-weight: 700;
+    }
+
+    .label {
+      color: #c9c9c9;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 35px;
+      flex-wrap: wrap;
+    }
+
+    .btn-custom {
+      min-width: 120px;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-custom:hover {
+      transform: translateY(-3px);
+    }
+
+    .start {
+      background: #20c997;
+      color: white;
+    }
+
+    .pause {
+      background: #ffc107;
+      color: #111;
+    }
+
+    .reset {
+      background: #dc3545;
+      color: white;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 25px;
+      min-height: 25px;
+      font-weight: 600;
+    }
+
+    .progress {
+      height: 7px;
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .progress-bar {
+      transition: width 1s linear;
+    }
+
+    @media (max-width: 650px) {
+
+      .timer-card {
+        padding: 30px 20px;
+      }
+
+      .title {
+        font-size: 30px;
+      }
+
+      .timer {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .number {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 400px) {
+
+      .timer {
+        gap: 10px;
+      }
+
+      .time-box {
+        padding: 18px 5px;
+      }
+
+      .number {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="timer-card">
+
+    <!-- Heading -->
+    <div class="text-center">
+
+      <div style="font-size: 45px;">⏳</div>
+
+      <h1 class="title">
+        Countdown Timer
+      </h1>
+
+      <p class="subtitle">
+        Set your target date and watch the countdown begin.
+      </p>
+
+    </div>
+
+
+    <!-- Date Input -->
+    <div class="date-box mt-4">
+
+      <label class="form-label">
+        Select Date & Time
+      </label>
+
+      <input
+        type="datetime-local"
+        id="targetDate"
+        class="form-control"
+      >
+
+    </div>
+
+
+    <!-- Timer -->
+    <div class="timer">
+
+      <div class="time-box">
+        <span class="number" id="days">00</span>
+        <span class="label">Days</span>
+      </div>
+
+      <div class="time-box">
+        <span class="number" id="hours">00</span>
+        <span class="label">Hours</span>
+      </div>
+
+      <div class="time-box">
+        <span class="number" id="minutes">00</span>
+        <span class="label">Minutes</span>
+      </div>
+
+      <div class="time-box">
+        <span class="number" id="seconds">00</span>
+        <span class="label">Seconds</span>
+      </div>
+
+    </div>
+
+
+    <!-- Progress -->
+    <div class="progress">
+
+      <div
+        class="progress-bar bg-success"
+        id="progressBar"
+        style="width: 0%"
+      ></div>
+
+    </div>
+
+
+    <!-- Buttons -->
+    <div class="buttons">
+
+      <button
+        class="btn-custom start"
+        onclick="startTimer()"
+      >
+        ▶ Start
+      </button>
+
+      <button
+        class="btn-custom pause"
+        onclick="pauseTimer()"
+      >
+        ⏸ Pause
+      </button>
+
+      <button
+        class="btn-custom reset"
+        onclick="resetTimer()"
+      >
+        ↻ Reset
+      </button>
+
+    </div>
+
+
+    <!-- Message -->
+    <div
+      class="message"
+      id="message"
+    >
+      Choose a date and click Start.
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let timerInterval = null;
+
+    let startTime = null;
+
+    let targetTime = null;
+
+    let totalDuration = 0;
+
+
+    // Elements
+    const targetDate = document.getElementById("targetDate");
+
+    const daysElement = document.getElementById("days");
+
+    const hoursElement = document.getElementById("hours");
+
+    const minutesElement = document.getElementById("minutes");
+
+    const secondsElement = document.getElementById("seconds");
+
+    const message = document.getElementById("message");
+
+    const progressBar = document.getElementById("progressBar");
+
+
+    // Start Timer
+    function startTimer() {
+
+      if (!targetDate.value) {
+
+        message.textContent =
+          "⚠️ Please select a date and time.";
+
+        return;
+      }
+
+
+      const selectedDate =
+        new Date(targetDate.value).getTime();
+
+
+      const currentTime =
+        new Date().getTime();
+
+
+      if (selectedDate <= currentTime) {
+
+        message.textContent =
+          "⚠️ Please select a future date.";
+
+        return;
+      }
+
+
+      // First start
+      if (!targetTime) {
+
+        targetTime = selectedDate;
+
+        startTime = currentTime;
+
+        totalDuration =
+          targetTime - startTime;
+      }
+
+
+      clearInterval(timerInterval);
+
+
+      timerInterval = setInterval(updateTimer, 1000);
+
+      updateTimer();
+
+
+      message.textContent =
+        "🚀 Countdown is running...";
+    }
+
+
+    // Update Timer
+    function updateTimer() {
+
+      const now =
+        new Date().getTime();
+
+
+      const distance =
+        targetTime - now;
+
+
+      if (distance <= 0) {
+
+        clearInterval(timerInterval);
+
+        daysElement.textContent = "00";
+        hoursElement.textContent = "00";
+        minutesElement.textContent = "00";
+        secondsElement.textContent = "00";
+
+        progressBar.style.width = "100%";
+
+        message.textContent =
+          "🎉 Time's Up!";
+
+        return;
+      }
+
+
+      // Calculate time
+      const days =
+        Math.floor(distance / (1000 * 60 * 60 * 24));
+
+
+      const hours =
+        Math.floor(
+          (distance % (1000 * 60 * 60 * 24))
+          / (1000 * 60 * 60)
+        );
+
+
+      const minutes =
+        Math.floor(
+          (distance % (1000 * 60 * 60))
+          / (1000 * 60)
+        );
+
+
+      const seconds =
+        Math.floor(
+          (distance % (1000 * 60))
+          / 1000
+        );
+
+
+      // Display
+      daysElement.textContent =
+        String(days).padStart(2, "0");
+
+      hoursElement.textContent =
+        String(hours).padStart(2, "0");
+
+      minutesElement.textContent =
+        String(minutes).padStart(2, "0");
+
+      secondsElement.textContent =
+        String(seconds).padStart(2, "0");
+
+
+      // Progress
+      const elapsed =
+        totalDuration - distance;
+
+
+      const percentage =
+        (elapsed / totalDuration) * 100;
+
+
+      progressBar.style.width =
+        Math.min(percentage, 100) + "%";
+    }
+
+
+    // Pause
+    function pauseTimer() {
+
+      if (timerInterval) {
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+        message.textContent =
+          "⏸ Timer Paused";
+      }
+    }
+
+
+    // Reset
+    function resetTimer() {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      targetTime = null;
+
+      startTime = null;
+
+      totalDuration = 0;
+
+      targetDate.value = "";
+
+      daysElement.textContent = "00";
+
+      hoursElement.textContent = "00";
+
+      minutesElement.textContent = "00";
+
+      secondsElement.textContent = "00";
+
+      progressBar.style.width = "0%";
+
+      message.textContent =
+        "Choose a date and click Start.";
+    }
+
+
+    // Change target date
+    targetDate.addEventListener("change", function () {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      targetTime = null;
+
+      startTime = null;
+
+      totalDuration = 0;
+
+      daysElement.textContent = "00";
+
+      hoursElement.textContent = "00";
+
+      minutesElement.textContent = "00";
+
+      secondsElement.textContent = "00";
+
+      progressBar.style.width = "0%";
+
+      message.textContent =
+        "Ready! Click Start to begin.";
+
+    });
+
+  </script>
+
+</body>
+</html>
